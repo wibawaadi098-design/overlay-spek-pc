@@ -1,1 +1,473 @@
-# overlay-spek-pc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Specs Stream Overlay Bar</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Orbitron & Rajdhani -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 1920px;
+            height: 220px;
+            overflow: hidden;
+            background: transparent;
+            font-family: 'Rajdhani', sans-serif;
+            user-select: none;
+        }
+
+        .overlay-container {
+            width: 1920px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            background: transparent;
+        }
+
+        .marquee-track {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            width: max-content;
+            animation: scrollLeftToRight 22s linear infinite;
+            will-change: transform;
+        }
+
+        @keyframes scrollLeftToRight {
+            0% {
+                transform: translateX(-50%);
+            }
+            100% {
+                transform: translateX(0%);
+            }
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, rgba(8, 15, 30, 0.92) 0%, rgba(13, 24, 48, 0.88) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.15), inset 0 0 10px rgba(147, 51, 234, 0.1);
+            position: relative;
+            clip-path: polygon(
+                0 12px, 
+                12px 0, 
+                calc(100% - 12px) 0, 
+                100% 12px, 
+                100% calc(100% - 12px), 
+                calc(100% - 12px) 100%, 
+                12px 100%, 
+                0 calc(100% - 12px)
+            );
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at top left, rgba(0, 229, 255, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.25) 0%, transparent 40%);
+        }
+
+        .rgb-line-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00f2fe, #4facfe, #9333ea, #00f2fe);
+            background-size: 300% 100%;
+            animation: rgbFlow 4s linear infinite;
+        }
+
+        .rgb-line-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #9333ea, #00f2fe, #4facfe, #9333ea);
+            background-size: 300% 100%;
+            animation: rgbFlow 4s linear infinite reverse;
+        }
+
+        @keyframes rgbFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .label-badge {
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0.25), rgba(147, 51, 234, 0.2));
+            border-left: 3px solid #00e5ff;
+            text-shadow: 0 0 6px rgba(0, 229, 255, 0.8);
+        }
+
+        .icon-container {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.15) 0%, rgba(147, 51, 234, 0.2) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.2), 0 0 12px rgba(0, 229, 255, 0.3);
+            position: relative;
+        }
+
+        .text-glow-blue {
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.7), 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .text-glow-purple {
+            color: #f3e8ff;
+            text-shadow: 0 0 8px rgba(168, 85, 247, 0.8), 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
+        .grid-pattern {
+            background-image: linear-gradient(to right, rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-size: 16px 16px;
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(0, 229, 255, 0.6)); }
+            50% { transform: scale(1.04); filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.8)); }
+        }
+        .pulse-icon {
+            animation: subtlePulse 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-transparent flex items-center justify-center">
+
+    <div class="overlay-container relative flex items-center w-[1920px] h-[220px] px-2 py-4">
+
+        <div class="marquee-track">
+
+            <!-- SET 1 -->
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <rect x="9" y="9" width="6" height="6" fill="rgba(0,229,255,0.3)"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="15" x2="23" y2="15"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="15" x2="4" y2="15"></line>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        PROCESSOR
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        Intel Core
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[16px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        i5-12400F
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 0.5s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <circle cx="8" cy="12" r="3.2" fill="rgba(147,51,234,0.3)"></circle>
+                        <circle cx="16" cy="12" r="3.2" fill="rgba(147,51,234,0.3)"></circle>
+                        <line x1="2" y1="10" x2="4" y2="10"></line>
+                        <line x1="2" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        GRAPHICS
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[16px] leading-tight text-glow-blue tracking-wide truncate">
+                        NVIDIA RTX 5060
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[15px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        8GB GDDR6
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 1s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 8h20v8H2z" fill="rgba(0,229,255,0.1)"></path>
+                        <path d="M6 16v2M10 16v2M14 16v2M18 16v2M6 6v2M10 6v2M14 6v2M18 6v2"></path>
+                        <rect x="5" y="10" width="3" height="4" fill="rgba(0,229,255,0.4)"></rect>
+                        <rect x="10.5" y="10" width="3" height="4" fill="rgba(0,229,255,0.4)"></rect>
+                        <rect x="16" y="10" width="3" height="4" fill="rgba(0,229,255,0.4)"></rect>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        MEMORY
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        RAM 16GB
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[15px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        (2 × 8GB Dual)
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 1.5s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="8" width="18" height="8" rx="1" fill="rgba(0,229,255,0.1)"></rect>
+                        <path d="M6 11h2v2H6zM10 11h4v2h-4z"></path>
+                        <circle cx="18" cy="12" r="1" fill="currentColor"></circle>
+                        <path d="M3 10v4"></path>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        SYSTEM DRIVE
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        NVMe SSD
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[16px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        256GB High-Speed
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 2s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <line x1="8" y1="8" x2="16" y2="8"></line>
+                        <line x1="8" y1="12" x2="12" y2="12"></line>
+                        <circle cx="16" cy="16" r="1" fill="currentColor"></circle>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        GAME STORAGE
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        SSD STORAGE
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[16px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        1TB Capacity
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 2.5s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <polygon points="13 8 9 13 12 13 11 16 15 11 12 11 13 8" fill="rgba(0,229,255,0.8)" stroke="none"></polygon>
+                        <circle cx="6" cy="9" r="1" fill="currentColor"></circle>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        POWER SUPPLY
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[15px] leading-tight text-glow-blue tracking-wide truncate">
+                        MSI MAG A650BN
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[15px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        650W 80+ Bronze
+                    </div>
+                </div>
+            </div>
+
+            <!-- SET 2 (Loop duplicate) -->
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <rect x="9" y="9" width="6" height="6" fill="rgba(0,229,255,0.3)"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="15" x2="23" y2="15"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="15" x2="4" y2="15"></line>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        PROCESSOR
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        Intel Core
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[16px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        i5-12400F
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 0.5s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <circle cx="8" cy="12" r="3.2" fill="rgba(147,51,234,0.3)"></circle>
+                        <circle cx="16" cy="12" r="3.2" fill="rgba(147,51,234,0.3)"></circle>
+                        <line x1="2" y1="10" x2="4" y2="10"></line>
+                        <line x1="2" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        GRAPHICS
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[16px] leading-tight text-glow-blue tracking-wide truncate">
+                        NVIDIA RTX 5060
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[15px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        8GB GDDR6
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 1s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 8h20v8H2z" fill="rgba(0,229,255,0.1)"></path>
+                        <path d="M6 16v2M10 16v2M14 16v2M18 16v2M6 6v2M10 6v2M14 6v2M18 6v2"></path>
+                        <rect x="5" y="10" width="3" height="4" fill="rgba(0,229,255,0.4)"></rect>
+                        <rect x="10.5" y="10" width="3" height="4" fill="rgba(0,229,255,0.4)"></rect>
+                        <rect x="16" y="10" width="3" height="4" fill="rgba(0,229,255,0.4)"></rect>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        MEMORY
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        RAM 16GB
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[15px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        (2 × 8GB Dual)
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 1.5s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="8" width="18" height="8" rx="1" fill="rgba(0,229,255,0.1)"></rect>
+                        <path d="M6 11h2v2H6zM10 11h4v2h-4z"></path>
+                        <circle cx="18" cy="12" r="1" fill="currentColor"></circle>
+                        <path d="M3 10v4"></path>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        SYSTEM DRIVE
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        NVMe SSD
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[16px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        256GB High-Speed
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 2s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <line x1="8" y1="8" x2="16" y2="8"></line>
+                        <line x1="8" y1="12" x2="12" y2="12"></line>
+                        <circle cx="16" cy="16" r="1" fill="currentColor"></circle>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        GAME STORAGE
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[17px] leading-tight text-glow-blue tracking-wide truncate">
+                        SSD STORAGE
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[16px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        1TB Capacity
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card grid-pattern w-[295px] h-[180px] flex items-center px-4 py-3 rounded-lg relative overflow-hidden">
+                <div class="rgb-line-top"></div>
+                <div class="rgb-line-bottom"></div>
+                <div class="icon-container pulse-icon w-[68px] h-[68px] min-w-[68px] rounded-xl flex items-center justify-center mr-3 z-10" style="animation-delay: 2.5s;">
+                    <svg class="w-10 h-10 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2" fill="rgba(0,229,255,0.1)"></rect>
+                        <polygon points="13 8 9 13 12 13 11 16 15 11 12 11 13 8" fill="rgba(0,229,255,0.8)" stroke="none"></polygon>
+                        <circle cx="6" cy="9" r="1" fill="currentColor"></circle>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center z-10 overflow-hidden pr-1">
+                    <div class="label-badge font-orbitron text-[11px] font-bold tracking-widest text-cyan-300 px-2 py-0.5 rounded-r w-max mb-1 uppercase">
+                        POWER SUPPLY
+                    </div>
+                    <div class="font-orbitron font-extrabold text-white text-[15px] leading-tight text-glow-blue tracking-wide truncate">
+                        MSI MAG A650BN
+                    </div>
+                    <div class="font-orbitron font-bold text-purple-300 text-[15px] leading-tight text-glow-purple tracking-wide truncate mt-0.5">
+                        650W 80+ Bronze
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
